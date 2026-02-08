@@ -76,7 +76,7 @@ module.exports = class InteractorDaemonizer {
    * @param {Function} cb invoked with <err>
    */
   static killInteractorDaemon (conf, cb) {
-    process.env.PM2_INTERACTOR_PROCESSING = true
+    process.env.PM2_INTERACTOR_PROCESSING = 'true'
 
     log('Killing interactor #1 ping')
     this.ping(conf, (err, online) => {
@@ -472,7 +472,7 @@ module.exports = class InteractorDaemonizer {
       return cb()
     }
 
-    process.env.PM2_INTERACTOR_PROCESSING = true
+    process.env.PM2_INTERACTOR_PROCESSING = 'true'
 
     this.getOrSetConf(Object.assign(cst, constants), opts, (err, conf) => {
       if (err || !conf) return cb(err || new Error('Cant retrieve configuration'))

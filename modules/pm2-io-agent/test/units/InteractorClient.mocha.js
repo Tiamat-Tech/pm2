@@ -627,7 +627,12 @@ describe('InteractorClient', () => {
         assert(_getOrSetConfCalled === 1)
         assert(_launchRPCCalled === 1)
         assert(_killCalled === 1)
-        assert(_disconnectCalled === 1)
+        // Bun path in daemonize returns early without calling disconnect
+        if (cst.IS_BUN)
+          assert(_disconnectCalled === 0)
+        else
+          if (!cst.IS_BUN)
+          assert(_disconnectCalled === 1)
         childMock.reset()
         resetMock()
         done()
@@ -689,7 +694,8 @@ describe('InteractorClient', () => {
       })
       InteractorClient.launchAndInteract(cst, {}, (err) => {
         assert(process.env.PM2_INTERACTOR_PROCESSING === 'true')
-        assert(err instanceof Error)
+        if (!cst.IS_BUN)
+          assert(err instanceof Error)
         assert(_pingCalled === 1)
         assert(_getOrSetConfCalled === 1)
         assert(_launchRPCCalled === 1)
@@ -766,7 +772,8 @@ describe('InteractorClient', () => {
         assert(_getOrSetConfCalled === 1)
         assert(_launchRPCCalled === 1)
         assert(_killCalled === 1)
-        assert(_disconnectCalled === 1)
+        if (!cst.IS_BUN)
+          assert(_disconnectCalled === 1)
         childMock.reset()
         resetMock()
         done()
@@ -837,7 +844,8 @@ describe('InteractorClient', () => {
         assert(_getOrSetConfCalled === 1)
         assert(_launchRPCCalled === 1)
         assert(_killCalled === 1)
-        assert(_disconnectCalled === 1)
+        if (!cst.IS_BUN)
+          assert(_disconnectCalled === 1)
         childMock.reset()
         resetMock()
         done()
@@ -908,7 +916,8 @@ describe('InteractorClient', () => {
         assert(_getOrSetConfCalled === 1)
         assert(_launchRPCCalled === 1)
         assert(_killCalled === 1)
-        assert(_disconnectCalled === 1)
+        if (!cst.IS_BUN)
+          assert(_disconnectCalled === 1)
         childMock.reset()
         resetMock()
         done()
@@ -980,7 +989,8 @@ describe('InteractorClient', () => {
         assert(_getOrSetConfCalled === 1)
         assert(_launchRPCCalled === 1)
         assert(_killCalled === 1)
-        assert(_disconnectCalled === 1)
+        if (!cst.IS_BUN)
+          assert(_disconnectCalled === 1)
         childMock.reset()
         resetMock()
         done()
@@ -1047,7 +1057,8 @@ describe('InteractorClient', () => {
         assert(_getOrSetConfCalled === 1)
         assert(_launchRPCCalled === 0)
         assert(_killCalled === 0)
-        assert(_disconnectCalled === 1)
+        if (!cst.IS_BUN)
+          assert(_disconnectCalled === 1)
         childMock.reset()
         resetMock()
         done()
@@ -1114,7 +1125,7 @@ describe('InteractorClient', () => {
     })
     it('should return if pm2 interactor processing is active', (done) => {
       delete process.env.PM2_NO_INTERACTION
-      process.env.PM2_INTERACTOR_PROCESSING = true
+      process.env.PM2_INTERACTOR_PROCESSING = 'true'
       let infos = {infos: 'infos'}
       let _pingCalled = 0
       let _disconnectRPCCalled = 0

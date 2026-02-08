@@ -107,9 +107,12 @@ E2E_FAILED=0
 #   nvm-node-version.sh - nvm not available on Windows
 #   inside-pm2.sh       - relies on Linux process behavior
 #   port-release.sh     - platform-specific port handling
+#   reload.sh           - SIGINT signal delivery doesn't work on Windows
+#                         (process.kill(pid, 'SIGINT') terminates immediately
+#                         without triggering JS signal handlers)
 
 # CLI
-runTest ./test/e2e/cli/reload.sh
+# runTest ./test/e2e/cli/reload.sh  # excluded: see above
 runTest ./test/e2e/cli/start-app.sh
 runTest ./test/e2e/cli/operate-regex.sh
 runTest ./test/e2e/cli/app-configuration.sh
