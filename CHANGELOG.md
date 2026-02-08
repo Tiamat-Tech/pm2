@@ -1,4 +1,22 @@
 
+## 7.0.0
+
+- Require Node.js >= 20.0.0
+- Internalize pm2-axon, pm2-axon-rpc, pm2-io-bpm, pm2-io-agent, fclone as local modules
+- Internalize pm2-multimeter and charm into lib/tools/multimeter (zero external deps)
+- Replace `needle` with native `fetch` (CliAuth, TAR publish)
+- Replace `enquirer` with lightweight built-in prompt (boilerplate selector)
+- Replace `promptly` with built-in lib/tools/prompt
+- Replace `mkdirp` with native `fs.mkdirSync({ recursive: true })`
+- Replace `source-map-support` with native `process.setSourceMapsEnabled()`
+- Replace `sprintf-js` with template literals (Dashboard)
+- Replace `url.parse()` with native `URL` constructor (Serve, Utility, CliAuth)
+- Remove `fclone` npm dep, use internalized module
+- Add OpenTelemetry tracing as direct dependencies
+- Add test scripts for internalized modules (bpm, axon, axon-rpc, io-agent)
+- Expand Docker parallel test runner to cover all internalized module tests
+- Drop auto source map file detection in Common.prepareAppConf
+
 ## 6.0.14
 
 - Fixed version of @pm2/pm2-version-check #6055

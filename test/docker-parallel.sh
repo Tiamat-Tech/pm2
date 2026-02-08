@@ -78,11 +78,23 @@ EXCLUDED_TESTS=(
     "test/programmatic/user_management.mocha.js"   # Not in unit.sh
     # Docker timing issues
     "test/programmatic/exp_backoff_restart_delay.mocha.js"  # Timing-dependent exponential backoff test
+    "test/programmatic/signals.js"                          # Timing-dependent kill timeout test
 )
 
 # Exclude bun.sh unless RUNTIME=bun
 if [[ "$RUNTIME" != "bun" ]]; then
     EXCLUDED_TESTS+=("test/e2e/cli/bun.sh")
+fi
+
+# Exclude non-bun-compatible e2e tests when RUNTIME=bun (matches e2e.sh IS_BUN guard)
+if [[ "$RUNTIME" == "bun" ]]; then
+    EXCLUDED_TESTS+=(
+        "test/e2e/process-file/homogen-json-action.sh"
+        "test/e2e/internals/source_map.sh"
+        "test/e2e/internals/wrapped-fork.sh"
+        "test/e2e/logs/log-json.sh"
+        "test/e2e/misc/inside-pm2.sh"
+    )
 fi
 
 # Cleanup on exit
@@ -166,6 +178,7 @@ while IFS= read -r -d '' f; do
 done < <(find test/e2e -name "*.sh" -type f -print0 2>/dev/null)
 
 # Unit tests (also check exclusion list)
+# Match both *.mocha.js and *.js test files, but exclude fixtures directories
 while IFS= read -r -d '' f; do
     if ! is_excluded "$f"; then
         TESTS+=("unit:$f")
@@ -173,7 +186,27 @@ while IFS= read -r -d '' f; do
         ((SKIPPED++)) || true
         echo "[SKIP] $f (excluded)"
     fi
-done < <(find test/programmatic test/interface -name "*.mocha.js" -type f -print0 2>/dev/null)
+done < <(find test/programmatic test/interface -not -path "*/fixtures/*" -type f -name "*.js" -print0 2>/dev/null)
+
+# BPM tests (modules/pm2-io-bpm) - each spec file runs individually
+while IFS= read -r -d '' f; do
+    TESTS+=("bpm:$f")
+done < <(find modules/pm2-io-bpm/test -name "*.spec.js" -type f -print0 2>/dev/null)
+
+# IO Agent tests (modules/pm2-io-agent) - each mocha file runs individually
+while IFS= read -r -d '' f; do
+    TESTS+=("io-agent:$f")
+done < <(find modules/pm2-io-agent/test/units -maxdepth 1 -name "*.mocha.js" -type f -print0 2>/dev/null)
+
+# Axon tests (modules/pm2-axon) - each test file runs individually
+while IFS= read -r -d '' f; do
+    TESTS+=("axon:$f")
+done < <(find modules/pm2-axon/test -name "test.*.js" -type f -print0 2>/dev/null)
+
+# Axon-RPC tests (modules/pm2-axon-rpc) - each test file runs individually
+while IFS= read -r -d '' f; do
+    TESTS+=("axon-rpc:$f")
+done < <(find modules/pm2-axon-rpc/test -name "*.js" -type f -print0 2>/dev/null)
 
 TOTAL=${#TESTS[@]}
 GLOBAL_START=$(date +%s)
@@ -196,6 +229,26 @@ run_test() {
             --mount type=tmpfs,destination=/root/.pm2 \
             "$IMAGE_NAME" \
             bash -c "tar -xf - && source test/e2e/include.sh && bash $test_path" \
+            > "$log_file" 2>&1
+    elif [[ "$test_type" == "bpm" ]]; then
+        # BPM: mocha with extended timeout
+        cat "$CODEBASE_TAR" | docker run --rm -i \
+            --mount type=tmpfs,destination=/root/.pm2 \
+            "$IMAGE_NAME" \
+            bash -c "tar -xf - && mocha --exit --timeout 10000 --bail $test_path" \
+            > "$log_file" 2>&1
+    elif [[ "$test_type" == "axon" ]]; then
+        # Axon: custom runner (runs test file with node directly)
+        cat "$CODEBASE_TAR" | docker run --rm -i \
+            "$IMAGE_NAME" \
+            bash -c "tar -xf - && node $test_path" \
+            > "$log_file" 2>&1
+    elif [[ "$test_type" == "io-agent" ]] || [[ "$test_type" == "axon-rpc" ]]; then
+        # IO Agent / Axon-RPC: mocha with spec reporter
+        cat "$CODEBASE_TAR" | docker run --rm -i \
+            --mount type=tmpfs,destination=/root/.pm2 \
+            "$IMAGE_NAME" \
+            bash -c "tar -xf - && mocha --reporter spec --exit --bail $test_path" \
             > "$log_file" 2>&1
     else
         # Unit: extract codebase, run with mocha
