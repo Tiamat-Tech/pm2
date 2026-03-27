@@ -71,7 +71,7 @@ runUnitTest $D/cluster.mocha.js
 runUnitTest $D/graceful.mocha.js
 runUnitTest $D/inside.mocha.js
 runUnitTest $D/misc_commands.js
-runUnitTest $D/signals.js
+# Excluded: signals.js - SIGINT delivery doesn't trigger JS signal handlers on Windows
 runUnitTest $D/send_data_process.mocha.js
 runUnitTest $D/json_validation.mocha.js
 runUnitTest $D/env_switching.js
