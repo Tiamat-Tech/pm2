@@ -5,7 +5,7 @@ var PM2    = require('../..');
 var should = require('should');
 var fs     = require('fs');
 var path   = require('path');
-var DEV_NULL = process.platform === 'win32' ? 'NUL' : DEV_NULL;
+var DEV_NULL = process.platform === 'win32' ? 'NUL' : '/dev/null';
 
 describe('Programmatic log feature test', function() {
   this.timeout(30000);
