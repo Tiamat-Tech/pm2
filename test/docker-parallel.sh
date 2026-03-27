@@ -94,6 +94,8 @@ if [[ "$RUNTIME" == "bun" ]]; then
         "test/e2e/internals/wrapped-fork.sh"
         "test/e2e/logs/log-json.sh"
         "test/e2e/misc/inside-pm2.sh"
+        # Bun doesn't support Node.js inspector/profiling APIs
+        "modules/pm2-io-bpm/test/features/profiling.spec.js"
     )
 fi
 
@@ -190,7 +192,12 @@ done < <(find test/programmatic test/interface -not -path "*/fixtures/*" -type f
 
 # BPM tests (modules/pm2-io-bpm) - each spec file runs individually
 while IFS= read -r -d '' f; do
-    TESTS+=("bpm:$f")
+    if ! is_excluded "$f"; then
+        TESTS+=("bpm:$f")
+    else
+        ((SKIPPED++)) || true
+        echo "[SKIP] $f (excluded)"
+    fi
 done < <(find modules/pm2-io-bpm/test -name "*.spec.js" -type f -print0 2>/dev/null)
 
 # IO Agent tests (modules/pm2-io-agent) - each mocha file runs individually
