@@ -22,6 +22,7 @@
 - Fix command injection in WebAuth.js open() — replace exec() with execFile() #6089
 - CVE-2025-5891 Fix ReDoS in Config.js string-to-array split regex #6075
 - Fix [object Object] env vars leaked to fork mode subprocesses #6073
+- Rewrite TreeKill: single ps call + in-memory tree build, eliminates race conditions #6084
 
 ## 6.0.14
 
