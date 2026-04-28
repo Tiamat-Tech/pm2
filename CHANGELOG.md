@@ -1,9 +1,15 @@
 
 ## 7.0.0
 
-- Require Node.js >= 20.0.0
-- Internalize pm2-axon, pm2-axon-rpc, pm2-io-bpm, pm2-io-agent, fclone as local modules
+### Breaking Changes
+
+- Require Node.js >= 20.0.0 (dropped Node.js 16/18 support)
+
+### Core Refactor
+
+- Internalize pm2-axon, pm2-axon-rpc, pm2-io-bpm, pm2-io-agent, fclone as local modules (reduced supply chain surface)
 - Internalize pm2-multimeter and charm into lib/tools/multimeter (zero external deps)
+- Add Bun runtime support (ProcessContainerBun.js, ProcessContainerForkBun.js)
 - Replace `needle` with native `fetch` (CliAuth, TAR publish)
 - Replace `enquirer` with lightweight built-in prompt (boilerplate selector)
 - Replace `promptly` with built-in lib/tools/prompt
@@ -12,19 +18,44 @@
 - Replace `sprintf-js` with template literals (Dashboard)
 - Replace `url.parse()` with native `URL` constructor (Serve, Utility, CliAuth)
 - Remove `fclone` npm dep, use internalized module
-- CVE-2026-27699 Update proxy-agent to 6.5.0, basic-ftp to 5.3.1 #6088
-- Add OpenTelemetry tracing as direct dependencies
-- Add test scripts for internalized modules (bpm, axon, axon-rpc, io-agent)
-- Expand Docker parallel test runner to cover all internalized module tests
 - Drop auto source map file detection in Common.prepareAppConf
-- Fix HttpInterface env stripping never executing (WEB_STRIP_ENV_VARS) #6089
-- Fix prototype pollution in Configuration.set/unset via __proto__ key traversal #6089
-- Fix command injection in WebAuth.js open() — replace exec() with execFile() #6089
+
+### Security
+
 - CVE-2025-5891 Fix ReDoS in Config.js string-to-array split regex #6075
+- CVE-2026-27699 Update proxy-agent to 6.5.0, basic-ftp to 5.3.1 #6088
+- Fix command injection in WebAuth.js open() — replace exec() with execFile() #6089
+- Fix prototype pollution in Configuration.set/unset via __proto__ key traversal #6089
+- Fix HttpInterface env stripping never executing (WEB_STRIP_ENV_VARS) #6089
+
+### Bug Fixes
+
+- Rewrite TreeKill: single ps snapshot + in-memory tree build, eliminates race conditions. SIGKILL escalation now targets surviving child processes directly instead of re-walking a dead tree #6084
 - Fix [object Object] env vars leaked to fork mode subprocesses #6073
-- Rewrite TreeKill: single ps call + in-memory tree build, eliminates race conditions #6084
 - Fix Windows home path: use os.homedir() instead of HOMEPATH/HOMEDRIVE env vars #6106
-- Add --ftp option to `pm2 serve` for directory listing (python http.server style)
+- Fix Windows TreeKill callback consistency
+
+### Features
+
+- Add `--ftp` option to `pm2 serve` for directory listing (python http.server style)
+
+### Dependencies
+
+- Add OpenTelemetry tracing as direct dependencies (@opentelemetry/api, sdk-node, auto-instrumentations-node)
+- Upgrade OpenTelemetry packages to latest
+- Update pidusage from 3.0.2 to 4.0.1
+- Upgrade ws to ^8.18.0, eventemitter2 to ^6.4.9
+- Remove needle, enquirer, promptly, mkdirp, source-map-support, sprintf-js, fclone from npm dependencies
+
+### Testing
+
+- Add Docker parallel test runner with Node.js and Bun support
+- Add Windows test suite (test/windows.sh)
+- Add OpenTelemetry tracing tests
+- Add TreeKill unit tests
+- Add test scripts for internalized modules (bpm, axon, axon-rpc, io-agent)
+- Fix test compatibility for Node.js 22+ and Bun
+- CI matrix: Node.js 20 + latest
 
 ## 6.0.14
 
