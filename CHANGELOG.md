@@ -25,6 +25,8 @@
 - CVE-2025-5891 Fix ReDoS in Config.js string-to-array split regex #6075
 - CVE-2026-27699 Update proxy-agent to 6.5.0, basic-ftp to 5.3.1 #6088
 - Fix command injection in WebAuth.js open() — replace exec() with execFile() #6089
+- Fix command injection in PM2IO.js open() — replace exec() with execFile(), validate SUDO_USER
+- Fix command injection in lib/tools/open.js — replace exec() with execFile(), validate SUDO_USER
 - Fix prototype pollution in Configuration.set/unset via __proto__ key traversal #6089
 - Fix HttpInterface env stripping never executing (WEB_STRIP_ENV_VARS) #6089
 
@@ -34,6 +36,9 @@
 - Fix [object Object] env vars leaked to fork mode subprocesses #6073
 - Fix Windows home path: use os.homedir() instead of HOMEPATH/HOMEDRIVE env vars #6106
 - Fix Windows TreeKill callback consistency
+- Fix missing BPM monitoring injection in Bun cluster mode (ProcessContainerBun.js)
+- Fix ReferenceError crash in Bun cluster console overrides when disable_logs is true
+- Fix CliAuth wrong credentials error displaying "undefined" instead of error message
 
 ### Features
 
