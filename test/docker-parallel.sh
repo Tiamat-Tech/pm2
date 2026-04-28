@@ -241,27 +241,27 @@ run_test() {
     if [[ "$test_type" == "e2e" ]]; then
         # E2E: extract codebase, source include.sh, then run the script
         # Use tmpfs for ~/.pm2 to speed up PM2 file I/O
-        cat "$CODEBASE_TAR" | docker run --rm -i \
+        cat "$CODEBASE_TAR" | docker run --rm -i --init \
             --mount type=tmpfs,destination=/root/.pm2 \
             "$IMAGE_NAME" \
             bash -c "tar -xf - && source test/e2e/include.sh && bash $test_path" \
             > "$log_file" 2>&1
     elif [[ "$test_type" == "bpm" ]]; then
         # BPM: mocha with extended timeout
-        cat "$CODEBASE_TAR" | docker run --rm -i \
+        cat "$CODEBASE_TAR" | docker run --rm -i --init \
             --mount type=tmpfs,destination=/root/.pm2 \
             "$IMAGE_NAME" \
             bash -c "tar -xf - && $MOCHA --exit --timeout 10000 --bail $test_path" \
             > "$log_file" 2>&1
     elif [[ "$test_type" == "axon" ]]; then
         # Axon: custom runner (runs test file directly)
-        cat "$CODEBASE_TAR" | docker run --rm -i \
+        cat "$CODEBASE_TAR" | docker run --rm -i --init \
             "$IMAGE_NAME" \
             bash -c "tar -xf - && $JSRUN $test_path" \
             > "$log_file" 2>&1
     elif [[ "$test_type" == "io-agent" ]] || [[ "$test_type" == "axon-rpc" ]]; then
         # IO Agent / Axon-RPC: mocha with spec reporter
-        cat "$CODEBASE_TAR" | docker run --rm -i \
+        cat "$CODEBASE_TAR" | docker run --rm -i --init \
             --mount type=tmpfs,destination=/root/.pm2 \
             "$IMAGE_NAME" \
             bash -c "tar -xf - && $MOCHA --reporter spec --exit --bail $test_path" \
@@ -269,7 +269,7 @@ run_test() {
     else
         # Unit: extract codebase, run with mocha
         # Use tmpfs for ~/.pm2 to speed up PM2 file I/O
-        cat "$CODEBASE_TAR" | docker run --rm -i \
+        cat "$CODEBASE_TAR" | docker run --rm -i --init \
             --mount type=tmpfs,destination=/root/.pm2 \
             "$IMAGE_NAME" \
             bash -c "tar -xf - && $MOCHA --exit --bail $test_path" \
