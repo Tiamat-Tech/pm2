@@ -24,6 +24,7 @@
 - Fix [object Object] env vars leaked to fork mode subprocesses #6073
 - Rewrite TreeKill: single ps call + in-memory tree build, eliminates race conditions #6084
 - Fix Windows home path: use os.homedir() instead of HOMEPATH/HOMEDRIVE env vars #6106
+- Add --ftp option to `pm2 serve` for directory listing (python http.server style)
 
 ## 6.0.14
 
