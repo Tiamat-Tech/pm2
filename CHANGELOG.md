@@ -17,6 +17,7 @@
 - Add test scripts for internalized modules (bpm, axon, axon-rpc, io-agent)
 - Expand Docker parallel test runner to cover all internalized module tests
 - Drop auto source map file detection in Common.prepareAppConf
+- Fix HttpInterface env stripping never executing (WEB_STRIP_ENV_VARS) #6089
 
 ## 6.0.14
 
