@@ -15,7 +15,7 @@
  */
 
 const { diag } = require('@opentelemetry/api')
-const { ExportResultCode, getStringFromEnv } = require('@opentelemetry/core')
+const { ExportResultCode } = require('@opentelemetry/core')
 const { prepareSend } = require('./platform/index')
 const zipkinTypes = require('./types')
 const {
@@ -33,7 +33,7 @@ const { ServiceManager } = require('../../serviceManager')
 class CustomZipkinExporter {
   constructor (config = {}) {
     this.DEFAULT_SERVICE_NAME = 'OpenTelemetry Service'
-    this._urlStr = config.url || getStringFromEnv('OTEL_EXPORTER_ZIPKIN_ENDPOINT') || 'http://localhost:9411/api/v2/spans'
+    this._urlStr = config.url || process.env.OTEL_EXPORTER_ZIPKIN_ENDPOINT || 'http://localhost:9411/api/v2/spans'
     this.transport = ServiceManager.get('transport')
     this._send = prepareSend(this.transport, config.headers)
     this._serviceName = config.serviceName
