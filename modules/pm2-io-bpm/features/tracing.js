@@ -78,9 +78,16 @@ class TracingFeature {
       config.tracing.ignoreIncomingPaths = enabledTracingConfig.ignoreIncomingPaths
     }
 
-    const { NodeSDK } = require('@opentelemetry/sdk-node')
-    const { getNodeAutoInstrumentations } = require('@opentelemetry/auto-instrumentations-node')
-    const { CustomZipkinExporter } = require('../otel/custom-zipkin-exporter/zipkin')
+    let NodeSDK, getNodeAutoInstrumentations, CustomZipkinExporter
+    try {
+      NodeSDK = require('@opentelemetry/sdk-node').NodeSDK
+      getNodeAutoInstrumentations = require('@opentelemetry/auto-instrumentations-node').getNodeAutoInstrumentations
+      CustomZipkinExporter = require('../otel/custom-zipkin-exporter/zipkin').CustomZipkinExporter
+    } catch(e) {
+      console.error('[PM2][ERROR] OpenTelemetry packages not installed. Tracing disabled.')
+      console.error('[PM2][ERROR] To enable tracing, run: pm2 install-otel')
+      return
+    }
 
     const traceExporter = new CustomZipkinExporter()
 
