@@ -15,7 +15,7 @@
  */
 
 const { diag } = require('@opentelemetry/api')
-const { ExportResultCode, getEnv } = require('@opentelemetry/core')
+const { ExportResultCode, getStringFromEnv } = require('@opentelemetry/core')
 const { prepareSend } = require('./platform/index')
 const zipkinTypes = require('./types')
 const {
@@ -23,7 +23,7 @@ const {
   defaultStatusCodeTagName,
   defaultStatusErrorTagName,
 } = require('./transform')
-const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventions')
+const { ATTR_SERVICE_NAME } = require('@opentelemetry/semantic-conventions')
 const { prepareGetHeaders } = require('./utils')
 const { ServiceManager } = require('../../serviceManager')
 
@@ -33,7 +33,7 @@ const { ServiceManager } = require('../../serviceManager')
 class CustomZipkinExporter {
   constructor (config = {}) {
     this.DEFAULT_SERVICE_NAME = 'OpenTelemetry Service'
-    this._urlStr = config.url || getEnv().OTEL_EXPORTER_ZIPKIN_ENDPOINT
+    this._urlStr = config.url || getStringFromEnv('OTEL_EXPORTER_ZIPKIN_ENDPOINT') || 'http://localhost:9411/api/v2/spans'
     this.transport = ServiceManager.get('transport')
     this._send = prepareSend(this.transport, config.headers)
     this._serviceName = config.serviceName
@@ -55,9 +55,12 @@ class CustomZipkinExporter {
    * Export spans.
    */
   export (spans, resultCallback) {
+    if (spans.length === 0) {
+      return resultCallback({ code: ExportResultCode.SUCCESS })
+    }
     const serviceName = String(
       this._serviceName ||
-        spans[0].resource.attributes[SemanticResourceAttributes.SERVICE_NAME] ||
+        spans[0].resource.attributes[ATTR_SERVICE_NAME] ||
         this.DEFAULT_SERVICE_NAME
     )
 
@@ -126,8 +129,8 @@ class CustomZipkinExporter {
       toZipkinSpan(
         span,
         String(
-          span.attributes[SemanticResourceAttributes.SERVICE_NAME] ||
-            span.resource.attributes[SemanticResourceAttributes.SERVICE_NAME] ||
+          span.attributes[ATTR_SERVICE_NAME] ||
+            span.resource.attributes[ATTR_SERVICE_NAME] ||
             serviceName
         ),
         this._statusCodeTagName,

@@ -54,8 +54,12 @@ class NotifyFeature {
   }
 
   destroy () {
-    process.removeListener('uncaughtException', this.onUncaughtException)
-    process.removeListener('unhandledRejection', this.onUnhandledRejection)
+    if (this._onUncaughtException) {
+      process.removeListener('uncaughtException', this._onUncaughtException)
+    }
+    if (this._onUnhandledRejection) {
+      process.removeListener('unhandledRejection', this._onUnhandledRejection)
+    }
     this.logger('destroy')
   }
 
@@ -153,8 +157,10 @@ class NotifyFeature {
       return false
     }
 
-    process.on('uncaughtException', this.onUncaughtException.bind(this))
-    process.on('unhandledRejection', this.onUnhandledRejection.bind(this))
+    this._onUncaughtException = this.onUncaughtException.bind(this)
+    this._onUnhandledRejection = this.onUnhandledRejection.bind(this)
+    process.on('uncaughtException', this._onUncaughtException)
+    process.on('unhandledRejection', this._onUnhandledRejection)
   }
 
   expressErrorHandler () {

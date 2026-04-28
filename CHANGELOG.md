@@ -12,6 +12,7 @@
 - Replace `sprintf-js` with template literals (Dashboard)
 - Replace `url.parse()` with native `URL` constructor (Serve, Utility, CliAuth)
 - Remove `fclone` npm dep, use internalized module
+- CVE-2026-27699 Update proxy-agent to 6.5.0, basic-ftp to 5.3.1 #6088
 - Add OpenTelemetry tracing as direct dependencies
 - Add test scripts for internalized modules (bpm, axon, axon-rpc, io-agent)
 - Expand Docker parallel test runner to cover all internalized module tests

@@ -37,7 +37,7 @@ const defaultStatusErrorTagName = 'error'
 function toZipkinSpan (span, serviceName, statusCodeTagName, statusErrorTagName) {
   const zipkinSpan = {
     traceId: span.spanContext().traceId,
-    parentId: span.parentSpanId,
+    parentId: span.parentSpanId || (span.parentSpanContext && span.parentSpanContext.spanId),
     name: span.name,
     id: span.spanContext().spanId,
     kind: ZIPKIN_SPAN_KIND_MAPPING[span.kind],

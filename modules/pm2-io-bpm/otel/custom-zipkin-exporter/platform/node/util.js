@@ -36,11 +36,11 @@ function prepareSend (transport, headers) {
 
     zipkinSpans.forEach(span => {
       const isRootClient = span.kind === 'CLIENT' && !span.parentId
-      if (isRootClient && this.config.outbound === false) return
+      if (isRootClient) return
 
       /* CUSTOM - DROP USELESS TRACE */
       if ((span.duration > Constants.MINIMUM_TRACE_DURATION)) {
-        this.transport.send('trace-span', span)
+        transport.send('trace-span', span)
       }
     })
 
