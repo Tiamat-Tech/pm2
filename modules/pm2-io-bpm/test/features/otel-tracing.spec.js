@@ -1,6 +1,7 @@
 const assert = require('assert')
 const { fork } = require('child_process')
 const { resolve } = require('path')
+const OtelManager = require('../../../../lib/OtelManager')
 
 const launch = (fixture) => {
   return fork(resolve(__dirname, fixture), [], {
@@ -10,7 +11,13 @@ const launch = (fixture) => {
 }
 
 describe('OpenTelemetry tracing integration', function () {
-  this.timeout(15000)
+  this.timeout(60000)
+
+  before(function () {
+    if (!OtelManager.isInstalled()) {
+      OtelManager.install()
+    }
+  })
 
   it('should receive trace-span messages via IPC', (done) => {
     const child = launch('../fixtures/otelTracingChild')

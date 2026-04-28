@@ -5,6 +5,7 @@ var PM2    = require('../..');
 var should = require('should');
 var path   = require('path');
 var WebSocket = require('ws');
+var OtelManager = require('../../lib/OtelManager');
 
 var FIXTURE = path.resolve(__dirname, '..', 'fixtures', 'otel-tracing-ws-server.js');
 
@@ -17,6 +18,12 @@ describe('PM2 OpenTelemetry Tracing - WebSocket Server', function() {
 
   var bus;
   var appPort;
+
+  before(function () {
+    if (!OtelManager.isInstalled()) {
+      OtelManager.install();
+    }
+  });
 
   after(function(done) {
     pm2.delete('all', function() {

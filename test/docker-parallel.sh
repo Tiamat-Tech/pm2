@@ -96,6 +96,8 @@ if [[ "$RUNTIME" == "bun" ]]; then
         "test/e2e/misc/inside-pm2.sh"
         # Bun doesn't support Node.js inspector/profiling APIs
         "modules/pm2-io-bpm/test/features/profiling.spec.js"
+        # Requires node binary and npm for OTel package management
+        "test/e2e/cli/otel-install.sh"
     )
 fi
 
