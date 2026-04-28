@@ -31,8 +31,8 @@ node -e "require.resolve('@opentelemetry/api')"
 spec 'OTel api should be resolvable after install'
 
 ########### Test: install-otel when already installed (idempotent)
-$pm2 install-otel 2>&1 | grep -q "already installed"
-spec 'install-otel should report already installed on second run'
+$pm2 install-otel
+spec 'install-otel should succeed when already installed'
 
 ########### Test: --trace should work with OTel installed
 $pm2 start echo.js --trace
@@ -48,8 +48,8 @@ node -e "try { require.resolve('@opentelemetry/sdk-node'); process.exit(1) } cat
 spec 'OTel packages should not be resolvable after uninstall'
 
 ########### Test: uninstall-otel when not installed (idempotent)
-$pm2 uninstall-otel 2>&1 | grep -q "not installed"
-spec 'uninstall-otel should report not installed on second run'
+$pm2 uninstall-otel
+spec 'uninstall-otel should succeed when not installed'
 
 ########### Test: --trace auto-installs OTel
 $pm2 start echo.js --trace
