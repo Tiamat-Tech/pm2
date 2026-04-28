@@ -14,7 +14,6 @@ const TransporterInterface = require('./TransporterInterface.js')
 const domain = require('domain') // eslint-disable-line
 const WatchDog = require('./WatchDog')
 const InteractorClient = require('./InteractorClient')
-const semver = require('semver')
 const path = require('path')
 const pkg = require('../../../package.json')
 
@@ -152,9 +151,6 @@ const InteractorDaemon = module.exports = class InteractorDaemon {
    * if available in node
    */
   _internalDebugger () {
-    // inspector isn't available under node 8
-    if (semver.satisfies(process.version, '<8')) return
-
     const inspector = require('inspector')
     const state = {
       heap: false,

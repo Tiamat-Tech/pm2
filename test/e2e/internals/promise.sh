@@ -5,11 +5,6 @@ source "${SRC}/../include.sh"
 
 cd $file_path/promise/
 
-# Check for 0.10 & 0.12 support
-node -e "process.version.indexOf('v0') > -1 ? process.exit(1) : process.exit(0)"
-RET=$?
-[ $RET -eq 0 ] || exit 0
-
 echo "###### Cluster mode"
 > rejection.log
 $pm2 start rejection.js -i 1 -l rejection.log --merge-logs
