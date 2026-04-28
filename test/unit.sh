@@ -95,6 +95,13 @@ runUnitTest $D/fclone.mocha.js
 
 runUnitTest $D/issues/json_env_passing_4080.mocha.js
 
+runUnitTest $D/issue_6106_windows_home.mocha.js
+runUnitTest $D/issue_6089_prototype_pollution.mocha.js
+runUnitTest $D/issue_6075_redos.mocha.js
+runUnitTest $D/issue_6073_object_env.mocha.js
+runUnitTest $D/treekill.mocha.js
+runUnitTest $D/http_interface.mocha.js
+
 D=test/interface
 
 runUnitTest $D/bus.spec.mocha.js
