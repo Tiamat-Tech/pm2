@@ -19,6 +19,7 @@
 - Drop auto source map file detection in Common.prepareAppConf
 - Fix HttpInterface env stripping never executing (WEB_STRIP_ENV_VARS) #6089
 - Fix prototype pollution in Configuration.set/unset via __proto__ key traversal #6089
+- Fix command injection in WebAuth.js open() — replace exec() with execFile() #6089
 
 ## 6.0.14
 
