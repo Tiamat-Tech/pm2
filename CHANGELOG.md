@@ -20,6 +20,7 @@
 - Fix HttpInterface env stripping never executing (WEB_STRIP_ENV_VARS) #6089
 - Fix prototype pollution in Configuration.set/unset via __proto__ key traversal #6089
 - Fix command injection in WebAuth.js open() — replace exec() with execFile() #6089
+- CVE-2025-5891 Fix ReDoS in Config.js string-to-array split regex #6075
 
 ## 6.0.14
 
