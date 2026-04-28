@@ -7,16 +7,13 @@
 'use strict'
 
 const path = require('path')
+const os = require('os')
 let PM2_HOME
 
 if (process.env.PM2_HOME) {
   PM2_HOME = process.env.PM2_HOME
-} else if (process.env.HOME && !process.env.HOMEPATH) {
-  PM2_HOME = path.resolve(process.env.HOME, '.pm2')
-} else if (process.env.HOME || process.env.HOMEPATH) {
-  PM2_HOME = path.resolve(process.env.HOMEDRIVE, process.env.HOME || process.env.HOMEPATH, '.pm2')
 } else {
-  PM2_HOME = path.resolve('/etc', '.pm2')
+  PM2_HOME = path.resolve(os.homedir(), '.pm2')
 }
 
 const getUniqueId = () => {
