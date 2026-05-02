@@ -9,6 +9,7 @@
 - Fix incorrect file permissions on `openrc.tpl` template (0755 → 0644) #5957
 - Fix Windows cmd.exe regression: revert `bin/pm2*` launchers to `#!/usr/bin/env node` shebang (was polyglot `#!/bin/sh`). Polyglot worked on Linux/macOS but broke npm's `pm2.cmd` shim on Windows — `cmd.exe` can't interpret `/bin/sh` shebang and failed with `'"/bin/sh"' is not recognized as an internal or external command`. PowerShell's auto-generated `pm2.ps1` shim happened to call `node` directly so it kept working, masking the regression. Bun-only Linux/macOS users (no Node installed) need to symlink `node` to `bun` (`sudo ln -s $(which bun) /usr/local/bin/node`) — same workaround used in the project's bun test Dockerfile. Documented in README #6108
 
+
 ## 7.0.0
 
 ### Breaking Changes
