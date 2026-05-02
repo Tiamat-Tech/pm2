@@ -21,3 +21,4 @@ artifacts
 e2e_time
 run.sh
 dist
+bun.lock
