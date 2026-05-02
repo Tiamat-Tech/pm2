@@ -495,6 +495,10 @@ export interface StartOptions {
    */
   max_memory_restart?: number | string;
   /**
+   * Shortcut to inject a PORT environment variable into the started process.
+   */
+  port?: number;
+  /**
    * Arguments to pass to the interpreter
    */
   node_args?: string | string[];
