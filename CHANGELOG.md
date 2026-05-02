@@ -1,4 +1,10 @@
 
+## 7.0.1
+
+### Bug Fixes
+
+- Fix Python (and other non-Node) interpreter regression on Ubuntu: bun runtime detection used a naive `includes('bun')` substring check that matched any path containing the letters "bun" — most notably `/home/ubuntu/...`. Affected paths were routed through `ProcessContainerForkBun.js` and crashed with `SyntaxError: unterminated string literal` when Python tried to parse the JS container. Anchored the match to the end of the interpreter path (`=== 'bun'` or `/bun$/`) in both `lib/God/ForkMode.js` and `lib/Common.js` #5990
+
 ## 7.0.0
 
 ### Breaking Changes
