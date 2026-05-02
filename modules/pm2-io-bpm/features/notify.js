@@ -107,7 +107,7 @@ class NotifyFeature {
   }
 
   onUncaughtException (error) {
-    // Node 20+ always supports console.error(error) directly
+    // Node 18+ always supports console.error(error) directly
     console.error(error)
 
     const safeError = this.getSafeError(error)

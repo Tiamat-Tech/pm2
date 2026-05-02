@@ -3,7 +3,7 @@
 
 ### Breaking Changes
 
-- Require Node.js >= 20.0.0 (dropped Node.js 16/18 support)
+- Require Node.js >= 18.0.0 (dropped Node.js 16 support)
 
 ### Core Refactor
 
@@ -60,7 +60,7 @@
 - Add TreeKill unit tests
 - Add test scripts for internalized modules (bpm, axon, axon-rpc, io-agent)
 - Fix test compatibility for Node.js 22+ and Bun
-- CI matrix: Node.js 20 + latest
+- CI matrix: Node.js 18, 20 + latest
 
 ## 6.0.14
 

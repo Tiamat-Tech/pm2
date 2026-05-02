@@ -5,7 +5,7 @@
 #
 # Usage:
 #   ./test/docker-parallel.sh                        # Default (Node 20)
-#   NODE_VERSION=18 ./test/docker-parallel.sh        # Specify Node version
+#   NODE_VERSION=18 ./test/docker-parallel.sh        # Specify Node version (min supported: 18)
 #   RUNTIME=bun ./test/docker-parallel.sh            # Test with Bun
 #   MAX_JOBS=8 ./test/docker-parallel.sh             # Override parallelism
 #
@@ -15,7 +15,7 @@ cd "$(dirname "$0")/.."
 # Runtime: "node" (default) or "bun"
 RUNTIME=${RUNTIME:-node}
 
-# Node.js version (default: 20, ignored if RUNTIME=bun)
+# Node.js version (default: 20 LTS, min supported: 18, ignored if RUNTIME=bun)
 NODE_VERSION=${NODE_VERSION:-20}
 
 # Auto-detect parallelism

@@ -20,7 +20,7 @@ class InspectorProfiler {
     this.transport = undefined
     this.currentProfile = null
     this.logger = Debug('axm:features:profiling:inspector')
-    this.isNode11 = true // Always true on Node 20+
+    this.isNode11 = true // Always true on Node 18+
   }
 
   init () {
