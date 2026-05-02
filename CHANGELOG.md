@@ -62,6 +62,7 @@
 - Fix test compatibility for Node.js 22+ and Bun
 - CI matrix: Node.js 18, 20 + latest
 
+
 ## 6.0.14
 
 - Fixed version of @pm2/pm2-version-check #6055
