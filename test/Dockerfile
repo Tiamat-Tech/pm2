@@ -35,10 +35,13 @@ RUN if [ "$RUNTIME" = "node" ]; then \
     fi
 
 # Install Bun when RUNTIME=bun
+# Symlink bun→node so #!/usr/bin/env node shebangs resolve to Bun's node-compat runtime.
+# Same workaround Bun-only users apply on host systems.
 RUN if [ "$RUNTIME" = "bun" ]; then \
         curl -fsSL https://bun.sh/install | bash && \
         ln -s /root/.bun/bin/bun /usr/local/bin/bun && \
-        ln -s /root/.bun/bin/bunx /usr/local/bin/bunx; \
+        ln -s /root/.bun/bin/bunx /usr/local/bin/bunx && \
+        ln -s /root/.bun/bin/bun /usr/local/bin/node; \
     fi
 
 # Install mocha globally (only needed for Node runtime)

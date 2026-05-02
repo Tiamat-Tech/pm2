@@ -55,6 +55,12 @@ $ npm install pm2 -g
 $ bun install pm2 -g
 ```
 
+If you only have Bun installed (no Node.js), symlink `node` to `bun` so PM2's `#!/usr/bin/env node` shebang resolves to Bun's node-compatibility runtime:
+
+```bash
+$ sudo ln -s $(which bun) /usr/local/bin/node
+```
+
 ___
 
 You can install Node.js easily with [NVM](https://github.com/nvm-sh/nvm#installing-and-updating) or [FNM](https://github.com/Schniz/fnm) or install Bun with `curl -fsSL https://bun.sh/install | bash`
